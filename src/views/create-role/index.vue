@@ -5,7 +5,7 @@ import { MapEnum } from '@/assets/map-template/MapEnum'
 const router = useRouter()
 
 function to() {
-  router.push(`/world/${MapEnum.TEST}/1-1`)
+  router.push(`/world/${MapEnum.TEST}/0-0`)
 }
 </script>
 

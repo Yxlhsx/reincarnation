@@ -16,10 +16,10 @@ function getFile(e: Event) {
                 let jsonObj: object = {}
                 try {
                     jsonObj = JSON.parse(result)
+                    emit('select-file', jsonObj)
                 } catch {
                     Log.fail("读取失败，文件格式错误")
                 }
-                emit('select-file', jsonObj)
             } else {
                 Log.fail("读取失败，文件内容为空")
             }

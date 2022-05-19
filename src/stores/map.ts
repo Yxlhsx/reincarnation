@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { useRouter } from 'vue-router'
 
 import mapTemplateResource from '@/assets/map-template'
 import mapBlockResource from '@/assets/map-block'
@@ -9,9 +10,13 @@ export const useMapStore = defineStore({
   id: 'map',
   state: () => ({
     currentMap: new Array<Array<MapCell>>(),
-    currentCoordinate: '0-0'
+    currentCoordinate: [0, 0]
   }),
-  getters: {},
+  getters: {
+    getCoordinateStr(state): string {
+      return state.currentCoordinate[0] + '-' + state.currentCoordinate[1]
+    }
+  },
   actions: {
     async builder(mapName: string) {
       const mapTemplate: string[][] = mapTemplateResource[mapName]
@@ -24,11 +29,23 @@ export const useMapStore = defineStore({
       }
 
       this.currentMap = await renderMap(mapTemplate, mapBlock)
-      console.log(1)
     },
-    setCoordinate(coordinate: string): string {
-      this.currentCoordinate = coordinate
-      return coordinate
+    setCoordinate(coordinate: string): void {
+      try {
+        this.currentCoordinate = coordinate.split('-').map(i => {
+          const _i: number = Number(i)
+          if (isNaN(_i)) {
+            throw new Error()
+          } else {
+            return _i
+          }
+        })
+      } catch {
+        Log.fail('坐标格式错误')
+        // 跳转至404
+        const router = useRouter()
+        router.push('/404')
+      }
     }
   }
 })
